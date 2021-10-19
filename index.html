@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>New Boutiques Integrator</title>
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/night.css">
+  <link rel="stylesheet" href="plugin/highlight/style/monokai-sublime.css">
+  <meta charset="utf-8"/>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="title">
+    <img src="images/cbrain-large_white_alpha.png" class="cbblue">
+    <h2>The New Boutiques Integrator</h2>
+    Pierre Rioux
+    <p>
+    <small>CBRAIN Internal Documentation, September 2021</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="toc">
+    <h3>A presentation in several parts:</h3>
+    <ol>
+      <li>xyz (nn slides)</li>
+      <li>xyz (nn slides)</li>
+      <li>xyz (nn slides)</li>
+    </ol>
+  </section>
+
+<section id="tmp">
+<pre>
+notes
+- "boutiques" in names
+- files locations
+* proj
+* show
+* show com
+* show input
+* bosh
+* bosh exec launch
+</pre>
+</section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part1">
+    <h2>Part 1</h2>
+    <h3>What is Boutiques</h3>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="btq_proj">
+    <h3>The Project</h3>
+      <ul>
+        <li>Started in 2015 by Tristan Glatard</li>
+        <li>Originally specific to generating CBRAIN task code</li>
+        <li>Eventually made into a generic tool description platform</li>
+        <li>Modern codebase is mostly in Python</li>
+        <li>Includes full specifications and utilities</li>
+      <ul>
+      <p>
+      <img src="http://boutiques.github.io/images/logo.png" width="100" height="100" alt="Boutiques logo"/>
+      <a href="https://github.com/boutiques/boutiques">https://github.com/boutiques/boutiques</a>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="btq_desc">
+    <h3>A descriptor</h3>
+    <pre class="transp"><code class="json" data-trim>
+{
+    "tool-version": "6.0.4",
+    "name": "oxford_asl",
+    "author": "Oxford Centre for Functional MRI of the Brain (FMRIB)",
+    "description": "oxford_asl is part of BASIL",
+    "command-line": "oxford_asl [INPUT_FILE] [OUTPUT_DIR] [MASK]...",
+    "schema-version": "0.5",
+    "container-image": {
+        "image": "mcin/docker-fsl:latest",
+        "index": "docker://",
+        "type": "singularity"
+    },
+    "inputs": [  stuff ],
+    "output-files": [ stuff  ],
+    "custom": { stuff }
+}
+    </code></pre>
+  </section>
+
+</section>
+
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part2">
+    <h2>Part 2</h2>
+    <h3>The Models</h3>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="model_tool">
+    <h3>Tool</h3>
+    <ul>
+      <li>Identifies and describes a scientific tool</li>
+      <li>One record for all deployments</li>
+      <li>Database table: <strong>tools</strong></li>
+    </ul>
+    <hr>
+    <h5>Main attributes</h5>
+    <table>
+      <tr>
+        <td>id</td><td><em>3</em></td>
+      <tr>
+      <tr>
+        <td>name</td><td><em>"Civet"</em></td>
+      <tr>
+      <tr>
+        <td>cbrain_task_class_name</td><td><em>"CbrainTask::Civet"</em></td>
+      <tr>
+    </table>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="model_toolconfig">
+    <h3>ToolConfig</h3>
+    <ul>
+      <li>Identifies and describes an instance of a tool</li>
+      <li>Many per tool and per Execution Server (Bourreau)</li>
+      <li>Database table: <strong>tool_configs</strong></li>
+    </ul>
+    <hr>
+    <h5>Main attributes</h5>
+    <table>
+      <tr>
+        <td>id</td><td><em>513</em></td>
+      </tr>
+      <tr>
+        <td>tool_id</td><td><em>3</em> ("Civet")</td>
+      </tr>
+      <tr>
+        <td>bourreau_id</td><td><em>56</em> ("Beluga")</td>
+      </tr>
+      <tr>
+        <td>version_name</td><td><em>"2.1.1"</em></td>
+      </tr>
+      <tr>
+        <td>(config stuff)</td><td><em>(path, env, etc)</em></td>
+      </tr>
+    </table>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="model_cbraintask">
+    <h3>CbrainTask</h3>
+    <ul>
+      <li>Tracks a single cluster job</li>
+      <li>Is associated to one ToolConfig
+      <br><small>(and thus, to one Tool and one Bourreau)</small>
+      </li>
+      <li>Database table: <strong>tasks</strong></li>
+    </ul>
+    <hr>
+    <h5>Main attributes</h5>
+    <table>
+      <tr>
+        <td>id</td><td><em>60021</em></td>
+      </tr>
+      <tr>
+        <td>tool_config_id</td><td><em>513</em> (Tool "Civet" on "Beluga")</td>
+      </tr>
+      <tr>
+        <td>type</td><td><em>CbrainTask::Civet</em> (Ruby class from Tool)</td>
+      </tr>
+      <tr>
+        <td>cluster_jobid</td><td><em>285283</em> (SLURM ID on Beluga)</td>
+      </tr>
+      <tr>
+        <td>status</td><td><em>"On CPU"</em></td>
+      </tr>
+    </table>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="model_relationships">
+    <h3>Relationships</h3>
+    <img src="images/model_relationships.png">
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part3">
+    <h2>Part 3</h2>
+    <h3>CbrainTask Class Hierarchy</h3>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="base_classes">
+    <h3>Base Classes</h3>
+    <img src="images/base_classes.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="class_sep">
+    <h3>Portal vs Bourreau</h3>
+    <img src="images/class_sep.png">
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part4">
+    <h2>Part 4</h2>
+    <h3>Standard Task Integration</h3>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="why_plugins">
+    <h3>Plugins</h3>
+why plugins here
+  </section>
+
+<!-- ****************************** -->
+
+  <section>
+    <h3>Plugins Files Structure</h3>
+    <small>
+    <table>
+      <tr>
+        <th>File</th>
+        <th>Role</th>
+        <th>Class declaration</th>
+      </tr>
+      <tr>
+        <td>PLUGIN.../portal/tool_name.rb</td>
+        <td>Code loaded by Portal</td>
+        <td><pre>class CbrainTask::ToolName &lt; PortalTask</pre></td>
+      </tr>
+      <tr>
+        <td>PLUGIN.../bourreau/tool_name.rb</td>
+        <td>Code loaded by Bourreau</td>
+        <td><pre>class CbrainTask::ToolName &lt; ClusterTask</pre></td>
+      </tr>
+      <tr>
+        <td>PLUGIN.../views/_task_params.html.erb</td>
+        <td>Code rendered by Portal</td>
+        <td></td>
+      </tr>
+    </table>
+    <p>
+    For more info:<br>
+    <ul>
+      <li><a href="https://github.com/aces/cbrain/wiki/CbrainTask-Programmer-Guide" target="_blank">CbrainTask Programmer Guide</a></li>
+      <li><a href="https://prioux.github.io/cbrain-presentation/#/tasks1" target="_blank">CBRAIN Presentation (slide</a></li>
+    </ul>
+    </small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="class_file_loc">
+    <h3>Ruby Code File Locations</h3>
+    <img src="images/class_file_loc.png">
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part5">
+    <h2>Part 5</h2>
+    <h3>Old Boutiques Integration</h3>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_flow">
+    <h3>Old Integration Flow</h3>
+    <ul>
+      <li>Integrations happen during boot</li>
+      <li>This directory is scanned:<br>
+          <em>cbrain_plugins/installed-plugins/cbrain_task_descriptors</em></li>
+      <li>It contains pairs of files, e.g.<br>
+          <em>tool_name.json</em>, <em>tool_name.rb</em></li>
+      <li>The <em>.rb</em> file is a symlink to a common loader</li>
+      <li>It invokes the integrator code with:
+          <ul>
+            <li>'<em>ToolName</em>' as a name for the classes to create, created from the basename of the file</li>
+            <li>The <em>.json</em> file content</li>
+          </ul>
+      </li>
+      <li>Virtual files are then created and loaded, different for each descriptor</li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_diagram">
+    <h3>Old Integration Diagram</h3>
+    <img src="images/old_integ1.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_port_temp_1">
+    <h3>Old Templating: Source</h3>
+    <img src="images/portal_template.png">
+    <small>Excerpt of <em>portal.rb.erb</em> with syntax highlighting</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_port_temp_2">
+    <h3>Old Templating: Levels</h3>
+
+<pre class="ascode">
+<em>%unless defaults.empty?</em>
+  # Default values for some (all?) of <em>&lt;%= name %&gt;</em>'s parameters. Those values
+  # reflect the defaults taken by the tool's developer; feel free to change
+  # them to match your platform's requirements.
+  def self.default_launch_args #:nodoc:
+    super.merge({
+<em>%   id_width = max_width.(defaults, 'id') + "'".length</em>
+<em>%   defaults.each do |default|</em>
+      <em>&lt;%=
+        ":'%-#{id_width}s =&gt; %s," % [
+          default['id'] + "'",
+          default['default-value'].inspect
+        ]
+      %&gt;</em>
+<em>%   end</em>
+    })
+  end
+<em>% end</em>
+</pre>
+<small>In <em>YELLOW</em>: code executed at integration time<br>
+In WHITE: literal code ending up in the class</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_port_temp_3">
+    <h3>Old Templating: Result 1</h3>
+
+     If the JSON descriptor has <em>no defaults</em> for any of its inputs:<br>
+
+<pre class="ascode">
+&nbsp;
+&nbsp;
+# (no Ruby statements end up in the generated code)
+&nbsp;
+&nbsp;
+</pre>
+    <small>Generated Portal code</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_port_temp_4">
+    <h3>Old Templating: Result 2</h3>
+
+     If the JSON descriptor has <em>some defaults</em> for any of its inputs:<br>
+<pre><code class="ruby">
+  # Default values for some (all?) of CivetRerun's parameters. Those values
+  # reflect the defaults taken by the tool's developer; feel free to change
+  # them to match your platform's requirements.
+  def self.default_launch_args #:nodoc:
+    super.merge({
+      :'model'             =&gt; "icbm152nl_09s",
+      :'template'          =&gt; "0.50",
+      :'lsq'               =&gt; 12,
+      :'interp'            =&gt; "trilinear",
+      :'n3_dist'           =&gt; 75,
+      :'pve_advanced'      =&gt; true,
+      :'surfreg_model'     =&gt; "icbm152MCsym",
+      :'combine_surface'   =&gt; true,
+      :'thickness_methods' =&gt; "tlaplace",
+      :'thickness_kernels' =&gt; "30",
+      :'resample_surface'  =&gt; true,
+      :'surf_atlas'        =&gt; "lobes",
+    })
+  end
+</code></pre>
+    <small>Generated Portal code</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_params_temp_1">
+    <h3>Params Template Of Template</h3>
+    <img src="images/params_template.png">
+    <small>Excerpt of <em>task_params.html.erb.erb</em> with syntax highlighting<br>
+    Note that even my text editor gets confused!</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_params_temp_2">
+    <h3>Params Templates Levels</h3>
+<pre class="ascode">
+<em>  &lt;%-
+    classes  = [ 'tsk-prm', type.to_s ]
+    classes &lt;&lt; 'list' if list
+    classes &lt;&lt; 'prm-grp-mbr' if isGroupMember
+  -%&gt;</em>
+    &lt;%% id = '<em>&lt;%= id %&gt;</em>' %&gt;
+    <strong>&lt;li class="</strong>&lt;%%= id %&gt; <em>&lt;%= classes.join(' ') %&gt;</em>"<strong>&gt;</strong>
+      &lt;%%
+  <em>&lt;%- if type == :flag -%&gt;</em>
+        # Flag input toggle
+        checkbox.(id, name: id)
+
+  <em>&lt;%- end -%&gt;</em>
+        # Name/Label
+        label.(id, %q{ <em>&lt;%= param['name'] %&gt;</em> },
+<i>(91 lines skipped, I am not kidding)</i>
+      %&gt;
+    <strong>&lt;/li&gt;</strong>
+</pre>
+<small>In <em>YELLOW</em>: code executed at integration time<br>
+In WHITE: templated code ending up in the class<br>
+In <strong>CYAN</strong>: literal code ending up in the HTML</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_params_temp_3">
+    <h3>Generated Params HTML.erb</h3>
+<pre class="ascode">
+    &lt;% id = 'combine_surface' %&gt;
+    <strong>&lt;li class="</strong>&lt;%= id %&gt;<strong> tsk-prm flag prm-grp-mbr"&gt;</strong>
+      &lt;%
+        # Flag input toggle
+        checkbox.(id, name: id)
+
+        # Name/Label
+        label.(id, %q{ Combine left/right surfaces },
+          optional: true,
+          flag:     '-combine-surfaces'
+        )
+
+        # Description
+        description.(&lt;&lt;-'DESC',true)
+          Combine left/right surfaces
+        DESC
+      %&gt;
+    <strong>&lt;/li&gt;</strong>
+</pre>
+    <small>Sample generated <em>_task_params.html.erb</em></small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_consequences">
+    <h3>Old Integration: Consequences</h3>
+    <ul>
+      <li>There is a single set of templates</li>
+      <li>These templates must try to generate all the features of Boutiques</li>
+      <li>The templates are very complicated to edit and maintain</li>
+      <li>At run time, the descriptors are no longer available</li>
+    </ul>
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part6">
+    <h2>Part 6</h2>
+    <h3>New Boutiques Integration</h3>
+    <small>(finally!)</small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="goals">
+    <h3>Goals</h3>
+    <h5>Maintenance</h5>
+    <ul>
+      <li>Remove the templating system</li>
+      <li>Maintain compatibility with old integrator</li>
+    </ul><p>
+    <h5>Tool Class Implementation</h5>
+    <ul>
+      <li>All tools inherit from a new base class</li>
+      <li>This base class derives its behavior from a descriptor at run time</li>
+      <li>All behaviors are provided by small methods</li>
+      <li>The tool's class itself is initially empty</li>
+    </ul><p>
+    <h5>View Code Implementation</h5>
+    <ul>
+      <li>All the view templates are provided by small partials</li>
+      <li>Individual partials can be replaced/overriden</li>
+      <li>The new set of partials provides all the same UI as the original integrator</li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="helperclass1">
+    <h3>Helper Class For Descriptors</h3>
+    A new support module was created: BoutiquesSupport
+    <p>
+    It's located in <em>lib/boutiques_support.rb</em>
+    <p>
+<pre><code class="ruby" data-trim>
+irb&gt; desc = BoutiquesSupport::BoutiquesDescriptor.new_from_file "civet_rerun.json"
+irb&gt; desc.class
+BoutiquesSupport::BoutiquesDescriptor
+irb&gt; desc[:name]
+"CivetRerun"
+irb&gt; desc['name']
+"CivetRerun"
+irb&gt; desc.name
+"CivetRerun"
+irb&gt; desc['tool-version']
+"2.1.1"
+irb&gt; desc.tool_version # note the _ instead of -
+"2.1.1"
+irb&gt; desc.inputs.class
+Array
+irb&gt; desc.inputs.first
+{"name"=&gt;"Existing CIVET output", "id"=&gt;"civet_in", "description"=&gt;"..."}
+irb&gt; desc.inputs.first.class
+BoutiquesSupport::Input
+</code></pre>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="helperclass2">
+    <h3>Helper Class Usage</h3>
+The new Boutiques helper classes are implemented as<br> subclasses of my <em>RestrictedHash</em> class.
+<p>
+This means they make sure all attributes accessed through <strong>methods</strong> or <strong>hash-like []</strong>
+are are allowed in Boutiques.
+<pre><code class="ruby" data-trim>
+# This works:
+desc['name']  = 'MyNewName'
+
+# These three will raise an exception: there is no 'email' field in
+# the boutiques schema
+desc.email                               # reading as a method
+desc.email    = 'pierre.rioux@mcgill.ca' # write as method
+desc['email'] = 'pierre.rioux@mcgill.ca' # write as hash
+</code></pre><p>
+In general, the new integration code uses the <strong>method</strong> access scheme (<em>desc.abc</em>) instead of the hash access scheme (<em>desc['abc']</em>)
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_plugin_dir">
+    <h3>Plugin File Location</h3>
+    A descriptor <em>mytool.json</em> is integrated
+    when located in the subdirectory called <em>boutiques_descriptors</em>.
+    <p>
+    Typical plugin files:<p>
+<pre class="ascode">
+plugindir/cbrain_task/hello/portal/hello.rb     <strong># Tool 'hello', unrelated, standard integration</strong>
+plugindir/cbrain_task/hello/bourreau/hello.rb
+plugindir/cbrain_task/hello/views/_task_params.html.erb
+plugindir/userfiles/mymodel/mymodel.rb          <strong># Some unrelated model</strong>
+plugindur/cbrain_task_descriptors/oldtool.json  <strong># Tool 'oldtool', using old btq integration</strong>
+<em>plugindir/boutiques_descriptors/mytool.json</em>     <strong># Tool 'mytool', new btq integration</strong>
+</pre>
+    <p>
+    Symbolic links to these files are created in a special <strong>install</strong> directory by
+    the CBRAIN sysadmin, at install time.
+    <p>
+    In particular, all the boutiques desciptors for the new integration end up
+    linked into this new system subdirectory:<p>
+<pre class="ascode">
+<strong>{BrainPortal|Bourreau}</strong>/cbrain_plugins/installed-plugins/boutiques_descriptors
+</pre>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_boot">
+    <h3>New Integration Boot</h3>
+    <ul>
+      <li>The boot process is faster and lighter</li>
+      <li>Unlike the old integrator, we have:
+        <ul>
+          <li>No special fake class loader</li>
+          <li>No ruby code templates to render and load dynamically</li>
+          <li>No view templates to render and store in memory</li>
+        </ul>
+      </li>
+      <li>All we do have is a set of JSON files in the <strong>install</strong> directory</li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_boot_summary">
+    <h3>Boot-time Summary</h3>
+    At boot time, we scan all the <em>.json</em> files installed.
+    <p>
+    For <i>each JSON file</i>:
+    <ol>
+      <li>We load and store the JSON descriptor</li>
+      <li>If the descriptor is for a new Tool, we auto configure the tool</li>
+      <li>If the descriptor is for a new version, we auto configure a ToolConfig</li>
+      <li>We create the task handler class as <em>BoutiquesTask::ToolName</em></li>
+    </ol>
+    <p>
+    The next four slides describe each of these steps.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_boot_load">
+    <h3>Boot 1: Loading the descriptors</h3>
+    For <i>each JSON file</i>:
+    <ul>
+      <li>We load the descriptor's content into a <em>BoutiquesSupport::BoutiquesDescriptor</em> object</li>
+      <li>We extract two values: <strong>name</strong> and <strong>tool-version</strong></li>
+      <li>We store in a <i>global, persistent hash</i> the association<br>
+        <em>[ </em><strong>tool_name</strong><em>, </em><strong>tool_version</strong><em> ] => full_descriptor_content</em>
+      </li>
+      <li>This hash is called the <i>descriptor registration hash</i>, and is maintained by the ToolConfig class (mostly because it will be used by actual ToolConfigs later on)</li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_boot_tool">
+    <h3>Boot 2: Creating The Tool</h3>
+    For <i>each JSON file</i>:
+    <ul>
+      <li>We examine the <strong>name</strong> again</li>
+      <li>If a tool with that name already exists, we move on</li>
+      <li>Otherwise, we create a new Tool in the DB</li>
+      <li>The Tool's <em>cbrain_task_class_name</em> (see <a href="#model_tool">Part 2</a>) is set to <em>BoutiquesTask::ToolName</em></li>
+      <li>This string represents the tool's task's implementation class</li>
+      <li>The class itself is created later (see you in two slides)</li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_boot_toolconfig">
+    <h3>Boot 3: Creating The Tool Config</h3>
+    For <i>each JSON file</i>:
+    <ul>
+      <li>Note: all of this only happens when the current Rails app is a Bourreau</li>
+      <li>We examine the <strong>name</strong> and <strong>tool-version</strong> again</li>
+      <li>If a ToolConfig for these two values already exists, we move on</li>
+      <li>Otherwise, we create a new ToolConfig in the DB:
+        <ul>
+          <li>Tool: (the Tool found in the previous slide)</li>
+          <li>version_name: <strong>tool-version</strong></li>
+          <li>bourreau_id: (the current Rails app ID)</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_boot_btq_class">
+    <h3>Boot 4: Class Creation</h3>
+    For <i>each JSON file</i>:
+    <p>
+    We create, in memory, a new Ruby class that corresponds to
+    the string <em>BoutiquesTask::ToolName</em> configured in the Tool object.
+    <p>
+    That class is an <b>empty class that inherits everything</b>.
+    <p>
+    On the portal side, it behaves like this piece of code:
+<pre><code class="ruby" data-trim>
+class BoutiquesTask::ToolName &lt; BoutiquesPortalTask
+end
+</code></pre>
+    On the bourreau side, it's only slightly different:
+<pre><code class="ruby" data-trim>
+class BoutiquesTask::ToolName &lt; BoutiquesClusterTask
+end
+</code></pre>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_class">
+    <h3>New Integrator Class Hierarchy</h3>
+    <img src="images/btq_new_classes.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="howthisworks">
+    <h3>How this works</h3>
+    - xyz -
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="end">
+    <h2>The End</h2>
+    <h3 class="glow">Thank you</h3>
+
+    <strong>The base Ruby Integration framework was created by:</strong>
+    <br>
+    Pierre Rioux
+    <p>
+    <strong>The original Boutiques Integrator  was created by:</strong>
+    <br>
+    R&eacute;mi Bernard, Tristan Aumentado-Armstrong<br>
+    Tristan Glatard, Pierre Rioux
+    <p>
+    <strong>The new Boutiques Integrator was created by:</strong>
+    <br>
+    Pierre Rioux
+    <p>
+    <strong>Project management:</strong>
+    <br>
+    Marc-&Eacute;tienne Rousseau,
+    Shawn Brown,
+    Bryan Caron
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+    </div>
+  </div>
+
+  <!-- Declares a filter to turn white into CBRAIN blue, #05A3D6 -->
+
+  <svg height="0">
+    <filter id="cbrainblue">
+      <feColorMatrix values="0.0196 0.0    0.0    0 0
+                             0.0    0.6392 0.0    0 0
+                             0.0    0.0    0.8392 0 0
+                             0      0      0      1 0"/>
+    </filter>
+  </svg>
+
+  <!-- Main reveal.js setup -->
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.js"></script>
+  <script src="plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize(
+    { slideNumber: true, history: true }
+    );
+    hljs.initHighlightingOnLoad();
+  </script>
+
+  <!-- Styles -->
+
+  <style>
+
+    /* Headers */
+
+    @keyframes glowing {
+        0% { text-shadow: 0.0em 0.0em 0.0em #0cc; }
+       25% { text-shadow: 0.0em 0.0em 0.2em #0dd; }
+       50% { text-shadow: 0.0em 0.0em 0.4em #0ee; }
+       75% { text-shadow: 0.0em 0.0em 0.2em #0dd; }
+      100% { text-shadow: 0.0em 0.0em 0.0em #0cc; }
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4,
+    .reveal h5 {
+      color: #ffffff;
+      text-shadow: 0.0em 0.0em 0.2em #0cc;
+    }
+
+    /* Text styles: em, strong, b, i */
+
+    .reveal .glow {
+      animation: glowing 3555ms infinite;
+    }
+
+    .reveal em {
+      color: yellow;
+      font-style: normal; /* yes please! */
+    }
+    .reveal strong {
+      color: #0ff;  /* funny, I'm using RGB with only three digits today */
+    }
+    .reveal b {
+      color: #00f;
+    }
+    .reveal i {
+      color: #f00;
+      font-style: normal; /* yes please! */
+    }
+
+    /* Misc */
+
+    .reveal section img {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    .reveal section img.cbblue {
+      filter: url(#cbrainblue);
+    }
+    .reveal pre {
+      background: #033;
+      /* padding: 0.2em 0.5em 0.3em 0.5em; */
+      padding: 0;
+      width: auto;
+    }
+    .reveal pre.ascode {
+      background: #23241f;
+      padding: 0.2em 0.5em 0.3em 0.5em;
+    }
+    .reveal pre.compact {
+      display: inline-block;
+    }
+    .reveal pre.large {
+      font-size: 120%;
+    }
+    .reveal pre.medium {
+      font-size: 100%;
+    }
+    .reveal pre.supersmall {
+      font-size: 40%;
+    }
+    .reveal pre > code.nomaxheight {
+      max-height: none;
+    }
+    .reveal .cell {
+      display: table-cell;
+    }
+    .reveal th {
+      color: #0aa;
+    }
+    .reveal .transp {
+      background-color: transparent;
+    }
+    .reveal .resize80 { /* for pics */
+      width: 80%;
+      height: 80%;
+    }
+    .reveal .resize40 { /* for pics */
+      width: 40%;
+      height: 40%;
+    }
+    .reveal .resize10 { /* for pics */
+      width: 10%;
+      height: 10%;
+    }
+
+    .hljs-comment {  /* I don't like the default grey */
+      color: #c9a929;
+    }
+
+  </style>
+</body>
+
+</html>
