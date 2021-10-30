@@ -25,32 +25,24 @@
     Pierre Rioux
     <p>
     <small>CBRAIN Internal Documentation, September 2021</small>
+    <p>
+    <small><a href="https://github.com/aces/cbrain/pull/1153">GitHub Pull Request</a></small>
   </section>
 
 <!-- ****************************** -->
 
   <section id="toc">
-    <h3>A presentation in several parts:</h3>
+    <h3>A Presentation In Several Parts:</h3>
     <ol>
-      <li>xyz (nn slides)</li>
-      <li>xyz (nn slides)</li>
-      <li>xyz (nn slides)</li>
+      <li><a href="#part1">What Is Boutiques</a> (nn slides)</li>
+      <li><a href="#part2">The Models</a> (nn slides)</li>
+      <li><a href="#part3">CbrainTask Class Hierarchy</a> (nn slides)</li>
+      <li><a href="#part4">Standard Task Integration</a> (nn slides)</li>
+      <li><a href="#part5">Old Boutiques Integration</a> (nn slides)</li>
+      <li><a href="#part6">New Boutiques Integration: Boot</a> (nn slides)</li>
+      <li><a href="#part7">New Boutiques Integration: Run</a> (nn slides)</li>
     </ol>
   </section>
-
-<section id="tmp">
-<pre>
-notes
-- "boutiques" in names
-- files locations
-* proj
-* show
-* show com
-* show input
-* bosh
-* bosh exec launch
-</pre>
-</section>
 
 </section>
 
@@ -62,7 +54,7 @@ notes
 
   <section id="part1">
     <h2>Part 1</h2>
-    <h3>What is Boutiques</h3>
+    <h3>What Is Boutiques</h3>
   </section>
 
 <!-- ****************************** -->
@@ -84,7 +76,7 @@ notes
 <!-- ****************************** -->
 
   <section id="btq_desc">
-    <h3>A descriptor</h3>
+    <h3>A Descriptor</h3>
     <pre class="transp"><code class="json" data-trim>
 {
     "tool-version": "6.0.4",
@@ -129,7 +121,7 @@ notes
       <li>Database table: <strong>tools</strong></li>
     </ul>
     <hr>
-    <h5>Main attributes</h5>
+    <h5>Main Attributes</h5>
     <table>
       <tr>
         <td>id</td><td><em>3</em></td>
@@ -153,7 +145,7 @@ notes
       <li>Database table: <strong>tool_configs</strong></li>
     </ul>
     <hr>
-    <h5>Main attributes</h5>
+    <h5>Main Attributes</h5>
     <table>
       <tr>
         <td>id</td><td><em>513</em></td>
@@ -185,7 +177,7 @@ notes
       <li>Database table: <strong>tasks</strong></li>
     </ul>
     <hr>
-    <h5>Main attributes</h5>
+    <h5>Main Attributes</h5>
     <table>
       <tr>
         <td>id</td><td><em>60021</em></td>
@@ -256,6 +248,7 @@ notes
 
   <section id="why_plugins">
     <h3>Plugins</h3>
+todo
 why plugins here
   </section>
 
@@ -348,7 +341,7 @@ why plugins here
   <section id="old_port_temp_1">
     <h3>Old Templating: Source</h3>
     <img src="images/portal_template.png">
-    <small>Excerpt of <em>portal.rb.erb</em> with syntax highlighting</small>
+    <small>Excerpt from <em>portal.rb.erb</em> with syntax highlighting</small>
   </section>
 
 <!-- ****************************** -->
@@ -376,8 +369,8 @@ why plugins here
   end
 <em>% end</em>
 </pre>
-<small>In <em>YELLOW</em>: code executed at integration time<br>
-In WHITE: literal code ending up in the class</small>
+    <small>In <em>YELLOW</em>: code executed at integration time<br>
+    In WHITE: literal code ending up in the class</small>
   </section>
 
 <!-- ****************************** -->
@@ -432,7 +425,7 @@ In WHITE: literal code ending up in the class</small>
   <section id="old_params_temp_1">
     <h3>Params Template Of Template</h3>
     <img src="images/params_template.png">
-    <small>Excerpt of <em>task_params.html.erb.erb</em> with syntax highlighting<br>
+    <small>Excerpt from <em>task_params.html.erb.erb</em> with syntax highlighting<br>
     Note that even my text editor gets confused!</small>
   </section>
 
@@ -494,6 +487,20 @@ In <strong>CYAN</strong>: literal code ending up in the HTML</small>
 
 <!-- ****************************** -->
 
+  <section id="old_params_temp_4">
+    <h3>Generated Params HTML</h3>
+    <img src="images/params_html.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="old_params_temp_5">
+    <h3>Browser HTML</h3>
+    <img src="images/browser_params.png">
+  </section>
+
+<!-- ****************************** -->
+
   <section id="old_consequences">
     <h3>Old Integration: Consequences</h3>
     <ul>
@@ -516,6 +523,7 @@ In <strong>CYAN</strong>: literal code ending up in the HTML</small>
     <h2>Part 6</h2>
     <h3>New Boutiques Integration</h3>
     <small>(finally!)</small>
+    <h5>Boot-time Integration</h5>
   </section>
 
 <!-- ****************************** -->
@@ -550,7 +558,7 @@ In <strong>CYAN</strong>: literal code ending up in the HTML</small>
     <p>
     It's located in <em>lib/boutiques_support.rb</em>
     <p>
-<pre><code class="ruby" data-trim>
+    <pre><code class="ruby" data-trim>
 irb&gt; desc = BoutiquesSupport::BoutiquesDescriptor.new_from_file "civet_rerun.json"
 irb&gt; desc.class
 BoutiquesSupport::BoutiquesDescriptor
@@ -570,18 +578,20 @@ irb&gt; desc.inputs.first
 {"name"=&gt;"Existing CIVET output", "id"=&gt;"civet_in", "description"=&gt;"..."}
 irb&gt; desc.inputs.first.class
 BoutiquesSupport::Input
-</code></pre>
+    </code></pre>
   </section>
 
 <!-- ****************************** -->
 
   <section id="helperclass2">
     <h3>Helper Class Usage</h3>
-The new Boutiques helper classes are implemented as<br> subclasses of my <em>RestrictedHash</em> class.
-<p>
-This means they make sure all attributes accessed through <strong>methods</strong> or <strong>hash-like []</strong>
-are are allowed in Boutiques.
-<pre><code class="ruby" data-trim>
+    The new Boutiques helper classes are implemented as<br>
+    subclasses of my <em>RestrictedHash</em> class.
+    <p>
+    This means they make sure all attributes accessed through
+    <strong>methods</strong> or <strong>hash-like []</strong>
+    are are allowed in Boutiques.
+    <pre><code class="ruby" data-trim>
 # This works:
 desc['name']  = 'MyNewName'
 
@@ -590,8 +600,10 @@ desc['name']  = 'MyNewName'
 desc.email                               # reading as a method
 desc.email    = 'pierre.rioux@mcgill.ca' # write as method
 desc['email'] = 'pierre.rioux@mcgill.ca' # write as hash
-</code></pre><p>
-In general, the new integration code uses the <strong>method</strong> access scheme (<em>desc.abc</em>) instead of the hash access scheme (<em>desc['abc']</em>)
+    </code></pre><p>
+    In general, the new integration code uses the <strong>method</strong>
+    access scheme (<em>desc.abc</em>) instead of the hash
+    access scheme (<em>desc['abc']</em>)
   </section>
 
 <!-- ****************************** -->
@@ -602,7 +614,7 @@ In general, the new integration code uses the <strong>method</strong> access sch
     when located in the subdirectory called <em>boutiques_descriptors</em>.
     <p>
     Typical plugin files:<p>
-<pre class="ascode">
+    <pre class="ascode">
 plugindir/cbrain_task/hello/portal/hello.rb     <strong># Tool 'hello', unrelated, standard integration</strong>
 plugindir/cbrain_task/hello/bourreau/hello.rb
 plugindir/cbrain_task/hello/views/_task_params.html.erb
@@ -658,7 +670,7 @@ plugindur/cbrain_task_descriptors/oldtool.json  <strong># Tool 'oldtool', using 
 <!-- ****************************** -->
 
   <section id="new_boot_load">
-    <h3>Boot 1: Loading the descriptors</h3>
+    <h3>Boot 1: Loading The Descriptors</h3>
     For <i>each JSON file</i>:
     <ul>
       <li>We load the descriptor's content into a <em>BoutiquesSupport::BoutiquesDescriptor</em> object</li>
@@ -666,7 +678,7 @@ plugindur/cbrain_task_descriptors/oldtool.json  <strong># Tool 'oldtool', using 
       <li>We store in a <i>global, persistent hash</i> the association<br>
         <em>[ </em><strong>tool_name</strong><em>, </em><strong>tool_version</strong><em> ] => full_descriptor_content</em>
       </li>
-      <li>This hash is called the <i>descriptor registration hash</i>, and is maintained by the ToolConfig class (mostly because it will be used by actual ToolConfigs later on)</li>
+      <li>This hash is called the <i>descriptor register</i>, and is maintained by the ToolConfig class (mostly because it will be used by actual ToolConfigs later on)</li>
     </ul>
   </section>
 
@@ -734,11 +746,126 @@ end
     <img src="images/btq_new_classes.png">
   </section>
 
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part7">
+    <h2>Part 7</h2>
+    <h3>New Boutiques Integration</h3>
+    <h5>Ruby Run-time Integration</h5>
+  </section>
+
 <!-- ****************************** -->
 
-  <section id="howthisworks">
-    <h3>How this works</h3>
-    - xyz -
+  <section id="portal_calls">
+    <h3>Portal Calls</h3>
+    <img src="images/portal_calls.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="bourreau_calls">
+    <h3>Bourreau Calls</h3>
+    <img src="images/bourreau_calls.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="calls_recap">
+    <h3>Three Integrators Recap</h3>
+    Everything in <em>yellow</em> in the previous slides
+    is code or templates designed specifically for each tool.
+    <p>
+    Here's what is responsible for creating these things under the three integrators:
+    <ul>
+      <li><strong>Standard Ruby Integration:</strong><br>
+        a programmer writes the Ruby files and templates
+      </li>
+      <li><strong>Old Boutiques Integretor:</strong><br>
+        at boot time, the descriptor is loaded and
+        code and views are generated from templates
+      </li>
+      <li><strong>New Boutiques Integrator:</strong><br>
+        a single set of static Ruby files and templates
+        exists but their run-time behavior changes based on the
+        content of a descriptor
+      </li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="portal_code1">
+    <h3>Portal: How The Descriptor Is Fetched</h3>
+    <pre><code class="ruby" data-trim>
+class BoutiquesPortalTask &lt; PortalTask
+
+  # This method returns the BoutiquesDescriptor
+  # directly associated with the ToolConfig for the task
+  def boutiques_descriptor
+    self.tool_config.boutiques_descriptor
+  end
+
+  #...
+
+end
+    </code></pre>
+    <small>Excerpt from <em>app/models/boutiques_portal_task.rb</em></small>
+    <pre><code class="ruby" data-trim>
+class BoutiquesTask::ToolName &lt; BoutiquesPortalTask
+  # Nothing at all in the class!
+end
+    </code></pre>
+    <small>Boot time code for the task</small>
+
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="portal_code2">
+    <h3>Portal: How The Task Behavior Is<br>
+        Controlled By A Descriptor</h3>
+    <img src="images/portal_fetch_desc.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="cluster_code1">
+    <h3>Bourreau: How The Descriptor Is Fetched</h3>
+    <pre><code class="ruby" data-trim>
+class BoutiquesClusterTask &lt; ClusterTask
+
+  # This method returns the BoutiquesDescriptor
+  # directly associated with the ToolConfig for the task
+  def boutiques_descriptor
+    self.tool_config.boutiques_descriptor
+  end
+
+  #...
+
+end
+    </code></pre>
+    <small>Excerpt from <em>app/models/boutiques_cluster_task.rb</em></small>
+    <pre><code class="ruby" data-trim>
+class BoutiquesTask::ToolName &lt; BoutiquesClusterTask
+  # Again, nothing at all in the class!
+end
+    </code></pre>
+    <small>Boot time code for the task</small>
+
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="cluster_code2">
+    <h3>Bourreau: How Task Behavior Is<br>
+        Controlled By A Descriptor</h3>
+    <img src="images/bourreau_fetch_desc.png">
   </section>
 
 </section>
@@ -747,13 +874,367 @@ end
 <!-- ############################## -->
 <!-- ############################## -->
 
-<!-- ############################## -->
-<!-- ############################## -->
-<!-- ############################## -->
+<section>
+
+  <section id="part8">
+    <h2>Part 8</h2>
+    <h3>New Boutiques Integration</h3>
+    <h5>View Code Integration</h5>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="partials">
+    <h3>Separate HTML Partials</h3>
+    The original single large template of template<br>
+    <em>_task_params.html.erb.erb</em> (see <a href="#/old_params_temp_1">part 5</a>)<br>
+    has been split into a set of smaller templates:
+<pre>
+-rw-r--r--  1 prioux  staff   2305 Oct  4 11:00 _boutiques_group.html.erb
+-rw-r--r--  1 prioux  staff   4127 Oct  4 11:00 _boutiques_input.html.erb
+-rw-r--r--  1 prioux  staff    970 Oct  4 11:00 _boutiques_preview.html.erb
+-rw-r--r--  1 prioux  staff    995 Oct  4 11:00 _description.html.erb
+-rw-r--r--  1 prioux  staff   2326 Oct  4 11:00 _dropdown.html.erb
+-rw-r--r--  1 prioux  staff   4602 Oct  4 11:00 _edit_help.html.erb
+-rw-r--r--  1 prioux  staff  28488 Oct  4 11:00 _form_js.html.erb
+-rw-r--r--  1 prioux  staff    991 Oct  4 11:00 _group_checkbox.html.erb
+-rw-r--r--  1 prioux  staff   1622 Oct  4 11:00 _html_input.html.erb
+-rw-r--r--  1 prioux  staff   1905 Oct  4 11:00 _html_input_list.html.erb
+-rw-r--r--  1 prioux  staff   1811 Oct  4 11:00 _html_select.html.erb
+-rw-r--r--  1 prioux  staff   1910 Oct  4 11:00 _input_checkbox.html.erb
+-rw-r--r--  1 prioux  staff   1219 Oct  4 11:00 _input_label.html.erb
+-rw-r--r--  1 prioux  staff   1216 Oct  4 11:00 _opt_checkbox.html.erb
+-rw-r--r--  1 prioux  staff   3085 Oct  4 11:00 _show_params.html.erb
+-rw-r--r--  1 prioux  staff   2530 Oct  4 11:00 _task_params.html.erb
+</pre>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="partials_hierarchy">
+    <h3>Partials Hierarchy</h3>
+    All these partials invoke each other along these render paths:
+<pre>
+_task_params.html.erb
+  &#x21b3; _boutiques_input.html.erb    # one or many; see below for def
+  &#x21b3; _boutiques_group.html.erb    # zero, one, or many
+    &#x21b3; _group_checkbox.html.erb
+    &#x21b3; _boutiques_input.html.erb  # one or many
+      &#x21b3; _opt_checkbox.html.erb
+      &#x21b3; _input_label.html.erb
+      &#x21b3; One of:
+         _input_checkbox.html.erb
+         _dropdown.html.erb
+         _html_input.html.erb
+         _html_input_list.html.erb
+         _html_select.html.erb
+      &#x21b3; _description.html.erb
+  &#x21b3; _boutiques_preview.html.erb  # just a div
+  &#x21b3; _form_js.html.erb            # templated
+
+_show_params.html.erb # separate page
+
+_edit_help.html.erb   # separate overlay
+</pre>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_all">
+    <h3>Layout Breakdown: All</h3>
+    <img src="images/par_0_all.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_params">
+    <h3>Layout Breakdown: Params</h3>
+    <img src="images/par_1_params.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_groups">
+    <h3>Layout Breakdown: Groups</h3>
+    <img src="images/par_2_groups.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_labels">
+    <h3>Layout Breakdown: Labels</h3>
+    <img src="images/par_3_labels.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_checkboxes">
+    <h3>Layout Breakdown: Checkboxes</h3>
+    <img src="images/par_4_checkboxes.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_inputs">
+    <h3>Layout Breakdown: Inputs</h3>
+    <img src="images/par_5_inputs.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_descriptions">
+    <h3>Layout Breakdown: Descriptions</h3>
+    <img src="images/par_6_descriptions.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="params_browser_multiple">
+    <h3>Layout Breakdown: Multiple</h3>
+    <img src="images/par_7_multiple.png">
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="partials_mods">
+    <h3>Partials Changes</h3>
+    The templating code was modified as follow:
+    <p>
+    <ul>
+      <li>It was de-templated by one level</li>
+      <li>Distinct elements get distinct partials</li>
+      <li>The HTML code generated is controlled by <strong>@descriptor</strong></li>
+      <li>Javascript logic is extracted into a separate file</li>
+      <li>The javscript templated code was simplified</li>
+    </ul>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="partials_mods2">
+    <h3>Example Partial: Label</h3>
+    This partial receives <strong>input</strong> (a component of <strong>@descriptor</strong>) as a
+    local Ruby variable.<p>
+    <strong>input</strong> is a full <em>BoutiquesSupport::Input</em> object.
+<pre><code class="erb" data-trim>
+&lt;%-
+  name = input.name
+  flag = input.command_line_flag
+  opt  = input.optional
+-%&gt;
+
+&lt;label class="tsk-prm-lbl" for="&lt;%= input.cb_invoke_html_id %&gt;"&gt;
+  &lt;%= name %&gt;
+  &lt;% if flag.present? %&gt;
+    (&lt;code class="cmd-flag"&gt;&lt;%= flag %&gt;&lt;/code&gt;)
+  &lt;% end %&gt;
+  &lt;% unless opt %&gt;
+    &lt;span class="required"&gt;*&lt;/span&gt;
+  &lt;% end %&gt;
+&lt;/label&gt;
+</code></pre>
+    <small>Main content of <em>_input_label.html.erb</em></small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="js_redone">
+    <h3>About The Javascript</h3>
+    The JavaScript code is templated: within the
+    JS code loaded in the task's form, custom JS code
+    is created by Ruby code.
+    <p>
+    Most of the time, these JS code snippets
+    are small arrays or hashes of things related to the inputs.
+    <p>
+    The new integrator works like the old integrator
+    in that regard, but the way the substitions are made
+    has been greatly improved for clarity.
+    <p>
+    The next two slides show the before (old integrator) and
+    after (new integrator).
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="js_redone_old">
+    <h3>JS templating in <em>OLD</em> Integrator</h3>
+    <img src="images/js_old.png">
+    <small>Excerpts from <em>task_params.html.erb.erb</em></small>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="js_redone_new">
+    <h3>JS templating in <em>NEW</em> Integrator</h3>
+    <img src="images/js_new.png">
+    <small>Excerpts from <em>_form_js.html.erb</em></small>
+  </section>
+
+</section>
 
 <!-- ############################## -->
 <!-- ############################## -->
 <!-- ############################## -->
+
+<section>
+
+  <section id="part9">
+    <h2>Part 9</h2>
+    <h3>New Boutiques Integration</h3>
+    <h5>Code Conventions</h5>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="new_naming">
+    <h3>Naming Things</h3>
+    <ul>
+      <li>The word 'Boutiques' was almost never used in the old integrator code</li>
+      <li>The new integrator use it all the time:<br>
+        <ul>
+          <li>Classes: <em>BoutiquesTask::ToolName</em></li>
+          <li>Classes: <em>BoutiquesSupport</em>, <em>BoutiquesSupport::BoutiquesDescriptor</em>, <em>BoutiquesSupport::BoutiquesInput</em> etc</li>
+          <li>Paths: <em>cbrain_plugins/some-plugin/boutiques_descriptors</em></li>
+          <li>Paths: <em>cbrain_plugins/installed-plugins/boutiques_descriptors</em></li>
+        </ul>
+      </li>
+    </ul>
+    So if something has 'boutiques' in it, it's part of the new integrator.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="btq_support_methods">
+    <h3>BoutiquesSupport Descriptor Methods</h3>
+    The class has many helpful methods:
+    <pre><code class="ruby" data-trim>
+a = descriptor.inputs
+b = descriptor.file_inputs
+c = descriptor.required_file_inputs
+d = descriptor.list_inputs
+    </code></pre>
+    These are much more elegant than<br>
+    what used to be done in the old integrator:
+    <pre><code class="ruby" data-trim>
+b = params.select { |i| i['type'] == 'File' }
+c = params.select { |i| i['type'] == 'File' &amp;&amp; ! i['optional'] }
+d = params.select { |i| i['list'] }
+    </code></pre>
+    When working on this framework, add new methods as needed!
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="boutiques_task_class">
+    <h3>The 'BoutiquesTask' Class</h3>
+    There is a class called just <em>BoutiquesTask</em>.
+    <p>
+    It is used as a namespace for holding the real classes<br>
+    for the tools (e.g. <em>BoutiquesTask::ToolName</em>).
+    <p>
+    It is not, however, ever instanciated.<br>
+    It doesn't inherit from anything either:
+    <pre><code class="ruby" data-trim>
+class BoutiquesTask # not a AR model and does not inherit from no nothin'
+
+  Revision_info=CbrainFileRevision[__FILE__] #:nodoc:
+
+end
+    </code></pre>
+    <small>All of <em>cbrain-plugins-base/cbrain_task/boutiques_task/portal/boutiques_task.rb</em></small>
+    <p>
+    <i>Importantly</i>, the <em>views</em> subdirectory for that class is where all the
+    partials for the new boutiques integrator are located.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="invoke_params">
+    <h3>New Convention For Task Params</h3>
+    <div class="cell w50">
+    <small>CbrainTask::MultiBoutiquesDemo</small>
+    <pre><code class="json" data-trim>
+{
+  "interface_userfile_ids": [
+    "14465",
+    "14469"
+  ],
+  "sinput1": "14465",
+  "minput1": "14469",
+  "my_output_name": "outreport",
+  "option_a": false,
+  "option_h": false,
+  "option_upper_h": true,
+  "_cbrain_output_du_report_out": [
+    14510
+  ]
+}
+    </code></pre></div>
+    <div class="cell">&nbsp;</div>
+    <div class="cell w50">
+    <small>BoutiquesTask::NewMultiBoutiquesDemo</small>
+     <pre><code class="json" data-trim>
+{
+  "interface_userfile_ids": [
+    "14465",
+    "14469"
+  ],
+  "invoke": {
+    "my_output_name": "outreport",
+    "sinput1": "14465",
+    "minput1": "14469",
+    "option_a": false,
+    "option_h": false,
+    "option_upper_h": true
+  },
+  "_cbrain_output_du_report_out": [
+    14510
+  ]
+}
+    </code></pre></div>
+    The goal is that the <em>"invoke"</em> subobject must
+    work almost as-is as an input to the <strong>bosh</strong> utility,
+    once serialized as a JSON file ('almost', because file names are
+    replaced by Userfile IDs).
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="invoke_params2">
+    <h3>New Task Access Method For Params</h3>
+    Instead of accessing params using the long form:
+    <pre><code class="ruby" data-trim>
+opt_a = task.params[:invoke][:option_a]
+task.params[:invoke][:option_upper_h] = true
+    </code></pre>
+    all BoutiquesTask objects have the helper <em>invoke_params()</em>:
+    <pre><code class="ruby" data-trim>
+opt_a = task.invoke_params[:option_a]
+task.invoke_params[:option_upper_h] = true
+    </code></pre>
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part10">
+    <h2>Part 10</h2>
+    <h3>New Boutiques Integration</h3>
+    <h5>Customization And Configuration</h5>
+todo
+- cbrain:inherits
+- multiple descriptors access functions
+- override partials
+- manually override descriptor in tool config
+  </section>
+
+</section>
 
 <!-- ############################## -->
 <!-- ############################## -->
@@ -812,7 +1293,10 @@ end
   <script src="plugin/highlight/highlight.js"></script>
   <script>
     Reveal.initialize(
-    { slideNumber: true, history: true }
+      {
+        slideNumber:       true,
+        history:           true
+      }
     );
     hljs.initHighlightingOnLoad();
   </script>
@@ -898,6 +1382,9 @@ end
     }
     .reveal .cell {
       display: table-cell;
+    }
+    .reveal .w50 {
+      width: 50%;
     }
     .reveal th {
       color: #0aa;

@@ -2576,7 +2576,7 @@
 					if( isVerticalSlide() ) value.push( '.', indexv + 1 );
 			}
 
-			dom.slideNumber.innerHTML = formatSlideNumber( value[0], value[1], value[2] );
+			dom.slideNumber.innerHTML = formatSlideNumber( value[0]-1, value[1], value[2] );
 		}
 
 	}
