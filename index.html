@@ -26,22 +26,29 @@
     <p>
     <small>CBRAIN Internal Documentation, September 2021</small>
     <p>
-    <small><a href="https://github.com/aces/cbrain/pull/1153">GitHub Pull Request</a></small>
+    <small><a href="https://github.com/aces/cbrain/pull/1153" target="_blank">GitHub Pull Request</a></small>
   </section>
 
 <!-- ****************************** -->
 
   <section id="toc">
     <h3>A Presentation In Several Parts:</h3>
-    <ol>
-      <li><a href="#part1">What Is Boutiques</a> (nn slides)</li>
-      <li><a href="#part2">The Models</a> (nn slides)</li>
-      <li><a href="#part3">CbrainTask Class Hierarchy</a> (nn slides)</li>
-      <li><a href="#part4">Standard Task Integration</a> (nn slides)</li>
-      <li><a href="#part5">Old Boutiques Integration</a> (nn slides)</li>
-      <li><a href="#part6">New Boutiques Integration: Boot</a> (nn slides)</li>
-      <li><a href="#part7">New Boutiques Integration: Run</a> (nn slides)</li>
-    </ol>
+    <ul>
+      <li>1. <a href="#/part1">What Is Boutiques</a> (3 slides)</li>
+      <li>2. <a href="#/part2">The Models</a> (5 slides)</li>
+      <li>3. <a href="#/part3">CbrainTask Class Hierarchy</a> (3 slides)</li>
+      <li>4. <a href="#/part4">Standard Task Integration</a> (4 slides)</li>
+      <li>5. <a href="#/part5">Old Boutiques Integration</a> (13 slides)</li>
+      <li><i>New Boutiques Integration:</i>
+        <ul>
+          <li>6. <a href="#/part6">Boot-time</a> (12 slides)</li>
+          <li>7. <a href="#/part7">Run-time</a> (8 slides)</li>
+          <li>8. <a href="#/part8">View Code</a> (16 slides)</li>
+          <li>9. <a href="#/part9">Code Conventions</a> (6 slides)</li>
+          <li>10. <a href="#/part10">Customization And Configuration</a> (7 slides)</li>
+        </ul>
+      </li>
+    </ul>
   </section>
 
 </section>
@@ -65,12 +72,12 @@
         <li>Started in 2015 by Tristan Glatard</li>
         <li>Originally specific to generating CBRAIN task code</li>
         <li>Eventually made into a generic tool description platform</li>
-        <li>Modern codebase is mostly in Python</li>
+        <li>Modern code base is mostly in Python</li>
         <li>Includes full specifications and utilities</li>
       <ul>
       <p>
       <img src="http://boutiques.github.io/images/logo.png" width="100" height="100" alt="Boutiques logo"/>
-      <a href="https://github.com/boutiques/boutiques">https://github.com/boutiques/boutiques</a>
+      <a href="https://github.com/boutiques/boutiques" target="_blank">https://github.com/boutiques/boutiques</a>
   </section>
 
 <!-- ****************************** -->
@@ -248,13 +255,28 @@
 
   <section id="why_plugins">
     <h3>Plugins</h3>
-todo
-why plugins here
+    CBRAIN uses plugins to extend its functionality.
+    <p>
+    Plugins can provide new Userfile models,<br>
+    new libraries and new task classes.
+    <p>
+    This allow the CBRAIN code base to be independent<br>
+    of the code that provides these extended functions.
+    <p>
+    Plugins can be developed by other developers<br>
+    and CBRAIN admins can just install them.
+    <p>
+    But this requires all plugin code to follow certain coding<br>
+    conventions (APIs) and structure their code in a particular way.
+    <p>
+    The CBRAIN code base comes with one built-in plugin,<br>
+    <em>cbrain-plugins-base</em>, which provides some simple<br>
+    Userfile classes and a few example task classes.
   </section>
 
 <!-- ****************************** -->
 
-  <section>
+  <section id="plugins_struct">
     <h3>Plugins Files Structure</h3>
     <small>
     <table>
@@ -283,7 +305,7 @@ why plugins here
     For more info:<br>
     <ul>
       <li><a href="https://github.com/aces/cbrain/wiki/CbrainTask-Programmer-Guide" target="_blank">CbrainTask Programmer Guide</a></li>
-      <li><a href="https://prioux.github.io/cbrain-presentation/#/tasks1" target="_blank">CBRAIN Presentation (slide</a></li>
+      <li><a href="https://prioux.github.io/cbrain-presentation/#/tasks1" target="_blank">CBRAIN Presentation</a></li>
     </ul>
     </small>
   </section>
@@ -504,10 +526,16 @@ In <strong>CYAN</strong>: literal code ending up in the HTML</small>
   <section id="old_consequences">
     <h3>Old Integration: Consequences</h3>
     <ul>
-      <li>There is a single set of templates</li>
+      <li>There is a single set of templates, each quite big</li>
       <li>These templates must try to generate all the features of Boutiques</li>
       <li>The templates are very complicated to edit and maintain</li>
       <li>At run time, the descriptors are no longer available</li>
+    </ul>
+    <p>
+    See for instance, some old integrator templates:<br>
+    <ul>
+      <li><a href="https://github.com/aces/cbrain/blob/master/BrainPortal/lib/cbrain_task_generators/templates/portal.rb.erb" target="_blank">portal.rb.erb</a></li>
+      <li><a href="https://github.com/aces/cbrain/blob/master/BrainPortal/lib/cbrain_task_generators/templates/task_params.html.erb.erb" target="_blank">task_params.html.erb.erb</a></li>
     </ul>
   </section>
 
@@ -535,18 +563,18 @@ In <strong>CYAN</strong>: literal code ending up in the HTML</small>
       <li>Remove the templating system</li>
       <li>Maintain compatibility with old integrator</li>
     </ul><p>
-    <h5>Tool Class Implementation</h5>
+    <h5>Task Class Implementation</h5>
     <ul>
-      <li>All tools inherit from a new base class</li>
+      <li>All tasks inherit from a new base class</li>
       <li>This base class derives its behavior from a descriptor at run time</li>
       <li>All behaviors are provided by small methods</li>
-      <li>The tool's class itself is initially empty</li>
+      <li>The task's class itself is initially empty</li>
     </ul><p>
     <h5>View Code Implementation</h5>
     <ul>
       <li>All the view templates are provided by small partials</li>
       <li>Individual partials can be replaced/overriden</li>
-      <li>The new set of partials provides all the same UI as the original integrator</li>
+      <li>The new set of partials provides all the exact same UI as the original integrator</li>
     </ul>
   </section>
 
@@ -691,7 +719,7 @@ plugindur/cbrain_task_descriptors/oldtool.json  <strong># Tool 'oldtool', using 
       <li>We examine the <strong>name</strong> again</li>
       <li>If a tool with that name already exists, we move on</li>
       <li>Otherwise, we create a new Tool in the DB</li>
-      <li>The Tool's <em>cbrain_task_class_name</em> (see <a href="#model_tool">Part 2</a>) is set to <em>BoutiquesTask::ToolName</em></li>
+      <li>The Tool's <em>cbrain_task_class_name</em> (see <a href="#/model_tool">Part 2</a>) is set to <em>BoutiquesTask::ToolName</em></li>
       <li>This string represents the tool's task's implementation class</li>
       <li>The class itself is created later (see you in two slides)</li>
     </ul>
@@ -728,15 +756,15 @@ plugindur/cbrain_task_descriptors/oldtool.json  <strong># Tool 'oldtool', using 
     That class is an <b>empty class that inherits everything</b>.
     <p>
     On the portal side, it behaves like this piece of code:
-<pre><code class="ruby" data-trim>
+    <pre><code class="ruby" data-trim>
 class BoutiquesTask::ToolName &lt; BoutiquesPortalTask
 end
-</code></pre>
+    </code></pre>
     On the bourreau side, it's only slightly different:
-<pre><code class="ruby" data-trim>
+    <pre><code class="ruby" data-trim>
 class BoutiquesTask::ToolName &lt; BoutiquesClusterTask
 end
-</code></pre>
+    </code></pre>
   </section>
 
 <!-- ****************************** -->
@@ -1133,7 +1161,7 @@ d = params.select { |i| i['list'] }
     It is used as a namespace for holding the real classes<br>
     for the tools (e.g. <em>BoutiquesTask::ToolName</em>).
     <p>
-    It is not, however, ever instanciated.<br>
+    It is not, however, ever instantiated.<br>
     It doesn't inherit from anything either:
     <pre><code class="ruby" data-trim>
 class BoutiquesTask # not a AR model and does not inherit from no nothin'
@@ -1205,13 +1233,21 @@ end
     <h3>New Task Access Method For Params</h3>
     Instead of accessing params using the long form:
     <pre><code class="ruby" data-trim>
+# Old traditional way
 opt_a = task.params[:invoke][:option_a]
 task.params[:invoke][:option_upper_h] = true
     </code></pre>
-    all BoutiquesTask objects have the helper <em>invoke_params()</em>:
+    All BoutiquesTask objects have the helper <em>invoke_params()</em>:
     <pre><code class="ruby" data-trim>
+# Through the helper 'invoke_params'
 opt_a = task.invoke_params[:option_a]
 task.invoke_params[:option_upper_h] = true
+    </code></pre>
+    Within a task object, then we can even get rid of the receiver:
+    <pre><code class="ruby" data-trim>
+def some_task_method
+  opt_a = invoke_params[:option_a]
+end
     </code></pre>
   </section>
 
@@ -1227,11 +1263,140 @@ task.invoke_params[:option_upper_h] = true
     <h2>Part 10</h2>
     <h3>New Boutiques Integration</h3>
     <h5>Customization And Configuration</h5>
-todo
-- cbrain:inherits
-- multiple descriptors access functions
-- override partials
-- manually override descriptor in tool config
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="inherit1">
+    <h3>Override: Task Class 1</h3>
+    As explained in <a href="#/new_boot_btq_class">Part 6</a>, by default a descriptor creates<br>
+    a task class named <em>BoutiquesTask::ToolName</em>
+    <pre><code class="ruby" data-trim>
+class BoutiquesTask::ToolName &lt; BoutiquesPortalTask
+end
+    </code></pre>
+    <small>Internally generated code at boot time (on Portal side)</small>
+    <p>
+    This class inherits all the basic functionality for providing<br>
+    a behavior based on a descriptor (here, from <em>BoutiquesPortalTask</em>)
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="inherit2">
+    <h3>Override: Task Class 2</h3>
+    However, the descriptor can contain an override to<br>
+    specify an alternate superclass to inherit from:
+    <pre class="transp"><code class="json" data-trim>
+{
+    "name": "supertool",
+    "tool-version": "1.0",
+(...)
+    "custom": {
+      "cbrain:inherits-from-class": "MySuperHandler"
+    }
+}
+    </code></pre>
+    The boot-time code will then instead create the handler class as:
+    <pre><code class="ruby" data-trim>
+class BoutiquesTask::ToolName &lt; MySuperHandler
+end
+    </code></pre>
+    <small>Internally generated code at boot time (on Portal side)</small><br>
+    Presumably, <em>MySuperHandler</em> inherits from <em>BoutiquesPortalTask</em>
+    but overrides some of its behavior. The code for <em>MySuperHandler</em>
+    can be packaged within "lib/" in a plugin's structure.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="desc_methods1">
+    <h3>Override: Descriptor Methods 1</h3>
+    The base classes for the new integrator all define<br>
+    methods that return the same descriptor:
+    <pre><code class="ruby" data-trim>
+def boutiques_descriptor
+  self.tool_config.boutiques_descriptor
+end
+
+def descriptor_for_before_form
+  self.boutiques_descriptor
+end
+
+def descriptor_for_after_form
+  self.boutiques_descriptor
+end
+
+def descriptor_for_final_task_list
+  self.boutiques_descriptor
+end
+#etc...
+    </code></pre>
+    <small>Excerpts from <em>boutiques_portal_task.rb</em></small><br>
+    These are the methods invoked by (respectively)<br>
+    <em>before_form()</em>, <em>after_form()</em> etc.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="desc_methods2">
+    <h3>Override: Descriptor Methods 2</h3>
+    So, given that the superclass has been overriden<br>
+    as described in the previous slides, the new superclass<br>
+    can 'temper' with the descriptor and change the behavior<br>
+    of the integrator:
+    <pre><code class="ruby" data-trim>
+class MySuperHandler &lt; BoutiquesPortalTask
+
+  # Integration with this class removes one input parameter,
+  # but just during "before_form".
+  def descriptor_for_before_form
+    modified_desc = super.dup
+    modified_desc.inputs.reject! { |input| input.id == 'numcpus' }
+    modified_desc
+  end
+
+end
+    </code></pre>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="override_partials1">
+    <h3>Override: Partials</h3>
+    The set of view partials described in <a href="#/partials">Part 8</a> are stored<br>
+    in the <em>cbrain-plugins-base</em> plugin, in the "views/" directory<br>
+    for the task named <em>boutiques_task</em> (which is not itself ever instantiated).
+    <p>
+    Again, if the superclass has been overriden and it is coded as<br>
+    a standard task class (e.g. <em>CbrainTask::SuperHandler</em>) within a plugin,<br>
+    then any partial can be replaced as needed:
+    <pre class="ascode">
+boutiques_descriptors/my_tool.json  <strong># with cbrain:inherits set to CbrainTask::SuperHandler</strong>
+cbrain_task/super_handler/portal/super_handler.rb
+cbrain_task/super_handler/bourreau/super_handler.rb
+cbrain_task/super_handler/view/_input_label.html.erb <strong># custom labels!</strong>
+</pre>
+    <small>List of files in an example plugin, with annotations</small><p>
+    You only need to redefine the partials that you want, the others
+    will be fetched from the base location.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="override_desc_in_tc">
+    <h3>Override: Descriptor For ToolConfigs</h3>
+    As described in <a href="#/new_boot_load">Part 6</a>, descriptors
+    for the new integrator are all loaded and associated with ToolConfig
+    objects, at boot time.
+    <p>
+    Most of the time, this is enough. However, an admin, using the<br>
+    interface, can provide or override a ToolConfig's descriptor by<br>
+    providing a path to a JSON file.
+    <p>
+    <img src="images/tool_config.png">
+    The attribute can have four 'states':<br>
+    <b>Automatic</b>, <b>Manual</b>, <b>Overriden</b> or <b>None</b>.
   </section>
 
 </section>
