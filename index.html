@@ -46,6 +46,7 @@
           <li>8. <a href="#/part8">View Code</a> (16 slides)</li>
           <li>9. <a href="#/part9">Code Conventions</a> (6 slides)</li>
           <li>10. <a href="#/part10">Customization And Configuration</a> (7 slides)</li>
+          <li>11. <a href="#/part11">The Future (1 slide)</li>
         </ul>
       </li>
     </ul>
@@ -1397,6 +1398,54 @@ cbrain_task/super_handler/view/_input_label.html.erb <strong># custom labels!</s
     <img src="images/tool_config.png">
     The attribute can have four 'states':<br>
     <b>Automatic</b>, <b>Manual</b>, <b>Overriden</b> or <b>None</b>.
+  </section>
+
+</section>
+
+<!-- ############################## -->
+<!-- ############################## -->
+<!-- ############################## -->
+
+<section>
+
+  <section id="part11">
+    <h2>Part 11</h2>
+    <h3>New Boutiques Integration</h3>
+    <h5>The Future</h5>
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="desc_modules">
+    <h3>Special Modules Support</h3>
+    <pre class="transp"><code class="json" data-trim>
+{
+    "name": "supertool",
+    "tool-version": "1.0",
+(...)
+    "custom": {
+      "cbrain:included-ruby-modules": {
+        "InputFixer": { "planetname": "pluto" },
+        "OutputPatternRenamer": { "outdir": true },
+        "LicenseFinder: {
+           "freesurferlic": {
+             "type": "FreeSurferLicense"
+           }
+        }
+      }
+    }
+}
+    </code></pre>
+    <small>JSON descriptor with special CBRAIN Ruby modules specified</small>
+    <p>
+    <pre><code class="ruby" data-trim>
+class BoutiquesTask::ToolName &lt; BoutiquesPortalTask
+  require OutputPatternRenamer
+  require InputFixer
+  require LicenseFinder
+end
+    </code></pre>
+    <small>Internally generated code at boot time (on Portal side)</small>
   </section>
 
 </section>
