@@ -45,7 +45,7 @@
           <li>7. <a href="#/part7">Run-time</a> (8 slides)</li>
           <li>8. <a href="#/part8">View Code</a> (16 slides)</li>
           <li>9. <a href="#/part9">Code Conventions</a> (6 slides)</li>
-          <li>10. <a href="#/part10">Customization And Configuration</a> (7 slides)</li>
+          <li>10. <a href="#/part10">Customization And Configuration</a> (10 slides)</li>
           <li>11. <a href="#/part11">The Future</a> (2 slide)</li>
         </ul>
       </li>
@@ -1400,6 +1400,72 @@ cbrain_task/super_handler/view/_input_label.html.erb <strong># custom labels!</s
     <b>Automatic</b>, <b>Manual</b>, <b>Overriden</b> or <b>None</b>.
   </section>
 
+<!-- ****************************** -->
+
+  <section id="bosh_mode">
+    <h3>Bosh Execution Mode</h3>
+    The new integrator use the tool <em>bosh</em> to launch the tool's command.
+    <p>
+    There are two modes in the integrator: <strong>simulate</strong> and <strong>launch</strong>.
+    <p>
+    These correspond to the <em>bosh</em> subcommands of the same names.
+    <p>
+    The mode is selected in the descriptor in the <em>custom</em> structure:
+    <pre class="transp"><code class="json" data-trim>
+{
+    "name": "supertool",
+    "tool-version": "1.0",
+(...)
+    "custom": {
+      "cbrain:boutiques_bosh_exec_mode": "simulate",
+      "cbrain:boutiques_bosh_exec_mode": "launch"
+    }
+}
+    </code></pre>
+    The default is <strong>simulate</strong>.<br>
+    The two modes are explained in the next slides.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="bosh_mode_simulate">
+    <h3>Bosh Execution Mode: <strong>Simulate</strong></h3>
+    In this mode, when the script for the tool is being
+    built by CBRAIN, the class <em>BoutiquesClusterTask</em>
+    will run:
+<pre><code class="shell" data-trim>
+# Executed by the CBRAIN script builder
+bosh exec simulate -i invoke_params.json descriptor.json
+</code></pre>
+    This bosh command <i>generates a bash command for the tool</i>, and CBRAIN
+    captures this command and inserts it in the script that will be submitted
+    for execution.
+    <p>
+    See the <a href="https://github.com/boutiques/boutiques/blob/master/tools/README.md">manual for bosh</a> for more information.
+  </section>
+
+<!-- ****************************** -->
+
+  <section id="bosh_mode_launch">
+    <h3>Bosh Execution Mode: <strong>Launch</strong></h3>
+    In this mode, when the script for the tool is being
+    built by CBRAIN, the class <em>BoutiquesClusterTask</em>
+    will insert directly into the script a bosh command to
+    run the tool:
+<pre><code class="shell" data-trim>
+# Inserted in the script that will be submitted for execution
+bosh exec launch invoke_params.json descriptor.json
+</code></pre>
+    For this to succeed, the environement where the script will be
+    executed must have access to bosh (which is typically not the
+    case inside containers).
+    <p>
+    Note that the <em>"container-image"</em> section of the original descriptor
+    is completely removed before being saved in <em>descriptor.json</em>, since
+    CBRAIN handles containerization itself and we don't want an already containerized
+    bosh command to attempt to pull another container.
+  </section>
+
 </section>
 
 <!-- ############################## -->
@@ -1552,7 +1618,7 @@ end
       color: #0ff;  /* funny, I'm using RGB with only three digits today */
     }
     .reveal b {
-      color: #00f;
+      color: #22f;
     }
     .reveal i {
       color: #f00;
