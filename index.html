@@ -45,8 +45,7 @@
           <li>7. <a href="#/part7">Run-time</a> (8 slides)</li>
           <li>8. <a href="#/part8">View Code</a> (16 slides)</li>
           <li>9. <a href="#/part9">Code Conventions</a> (6 slides)</li>
-          <li>10. <a href="#/part10">Customization And Configuration</a> (10 slides)</li>
-          <li>11. <a href="#/part11">The Future</a> (2 slide)</li>
+          <li>10. <a href="#/part10">Customization And Configuration</a> (11 slides)</li>
         </ul>
       </li>
     </ul>
@@ -1466,49 +1465,36 @@ bosh exec launch invoke_params.json descriptor.json
     bosh command to attempt to pull another container.
   </section>
 
-</section>
-
-<!-- ############################## -->
-<!-- ############################## -->
-<!-- ############################## -->
-
-<section>
-
-  <section id="part11">
-    <h2>Part 11</h2>
-    <h3>New Boutiques Integration</h3>
-    <h5>The Future</h5>
-  </section>
-
 <!-- ****************************** -->
 
   <section id="desc_modules">
     <h3>Special Modules Support</h3>
     <pre class="transp"><code class="json" data-trim>
 {
-    "name": "supertool",
-    "tool-version": "1.0",
+  "name": "supertool",
+  "tool-version": "1.0",
 (...)
-    "custom": {
-      "cbrain:included-ruby-modules": {
-        "InputFixer": { "planetname": "pluto" },
-        "OutputPatternRenamer": { "outdir": true },
-        "LicenseFinder: {
-           "freesurferlic": {
-             "type": "FreeSurferLicense"
-           }
-        }
+  "custom": {
+    "cbrain:integrator_modules": {
+      "ModuleName": { "moduledata": "stuff" },
+      "InputFixer": { "planetname": "pluto" },
+      "OutputPatternRenamer": { "outdir": true },
+      "LicenseFinder": {
+         "freesurferlic": {
+           "type": "FreeSurferLicense"
+         }
       }
     }
+  }
 }
     </code></pre>
     <small>JSON descriptor with special CBRAIN Ruby modules specified</small>
     <p>
     <pre><code class="ruby" data-trim>
 class BoutiquesTask::ToolName &lt; BoutiquesPortalTask
-  require OutputPatternRenamer
-  require InputFixer
-  require LicenseFinder
+  include OutputPatternRenamer
+  include InputFixer
+  include LicenseFinder
 end
     </code></pre>
     <small>Internally generated code at boot time (on Portal side)</small>
